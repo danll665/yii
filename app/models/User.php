@@ -93,7 +93,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getRole(): \yii\db\ActiveQuery
     {
-        return $this->hasOne(Role::class, ['id' => 'role_id'])->via('role');
+        return $this->hasOne(Role::class, ['id'=>'role_id']);
     }
 
     /**

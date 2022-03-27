@@ -36,7 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'passport',
             'username',
             'password',
-            'role_id',
+            [
+                'format' => 'text',
+                'value'=>$model->getRole()->one()->name,
+                'attribute'=>'role_id',
+            ],
         ],
     ]) ?>
     <?= GridView::widget([

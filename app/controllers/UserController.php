@@ -60,7 +60,9 @@ class UserController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
+//        $model['role'] = $model->getRole()->one()->name;
         $data = [];
+        // Достаем все книги пользователя и записываем в массив для использования в виджете
         foreach($model->getClientLendingOutBooks()->all() as $LendingOutBook) {
             $books = [];
             $books['name'] = $LendingOutBook->getBook()->one()->name;
@@ -68,7 +70,7 @@ class UserController extends Controller
             $data[] = $books;
         }
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
             'dataProvider' => new ArrayDataProvider(['allModels' => $data,])
         ]);
     }
