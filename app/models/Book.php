@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "books".
@@ -10,18 +12,33 @@ use Yii;
  * @property int $id
  * @property string $name
  * @property int $artikul
- * @property int $receipt_date
  * @property string $author
+ * @property string $created_at
  *
- * @property Extradition[] $extraditions
- * @property ReturnBook[] $returnBooks
+ * @property LendingOutBook[] $lendingOutBook
+ * @property ReturnBook[] $returnBook
  */
 class Book extends \yii\db\ActiveRecord
 {
     /**
+     * @return array[]
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => false,
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'books';
     }
@@ -32,9 +49,10 @@ class Book extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'artikul', 'receipt_date', 'author'], 'required'],
-            [['artikul', 'receipt_date'], 'default', 'value' => null],
-            [['artikul', 'receipt_date'], 'integer'],
+            [['name', 'artikul', 'author'], 'required'],
+            [['artikul'], 'default', 'value' => null],
+            [['artikul'], 'integer'],
+            [['created_at'], 'safe'],
             [['name', 'author'], 'string', 'max' => 255],
         ];
     }
@@ -48,19 +66,19 @@ class Book extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'artikul' => 'Artikul',
-            'receipt_date' => 'Receipt Date',
             'author' => 'Author',
+            'created_at' => 'Created At',
         ];
     }
 
     /**
-     * Gets query for [[Extradition]].
+     * Gets query for [[LendingOutBook]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getExtraditions()
+    public function getLendingOutBook(): \yii\db\ActiveQuery
     {
-        return $this->hasMany(Extradition::className(), ['book_id' => 'id']);
+        return $this->hasMany(LendingOutBook::class, ['book_id' => 'id']);
     }
 
     /**
@@ -68,8 +86,8 @@ class Book extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getReturnBooks()
+    public function getReturnBook(): \yii\db\ActiveQuery
     {
-        return $this->hasMany(ReturnBook::className(), ['book_id' => 'id']);
+        return $this->hasMany(ReturnBook::class, ['book_id' => 'id']);
     }
 }

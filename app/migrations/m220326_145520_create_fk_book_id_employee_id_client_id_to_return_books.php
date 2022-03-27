@@ -13,7 +13,7 @@ class m220326_145520_create_fk_book_id_employee_id_client_id_to_return_books ext
     public function safeUp()
     {
         $this->addForeignKey(
-            'fk-return_books-book_id',
+            'fk_return_books_book_id',
             'return_books',
             'book_id',
             'books',
@@ -21,7 +21,7 @@ class m220326_145520_create_fk_book_id_employee_id_client_id_to_return_books ext
             'CASCADE'
         );
         $this->addForeignKey(
-            'fk-return_books-employee_id',
+            'fk_return_books_employee_id',
             'return_books',
             'employee_id',
             'users',
@@ -29,7 +29,7 @@ class m220326_145520_create_fk_book_id_employee_id_client_id_to_return_books ext
             'CASCADE'
         );
         $this->addForeignKey(
-            'fk-return_books-client_id',
+            'fk-return_books_client_id',
             'return_books',
             'client_id',
             'users',

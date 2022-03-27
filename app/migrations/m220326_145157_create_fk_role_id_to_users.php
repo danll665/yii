@@ -13,7 +13,7 @@ class m220326_145157_create_fk_role_id_to_users extends Migration
     public function safeUp()
     {
         $this->addForeignKey(
-            'fk-users-role_id',
+            'fk_users_role_id',
             'users',
             'role_id',
             'roles',

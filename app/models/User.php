@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 
 /**
@@ -17,10 +18,8 @@ use yii\web\IdentityInterface;
  * @property string $password
  * @property int $role_id
  *
- * @property Extradition[] $extraditions
- * @property Extradition[] $extraditions0
- * @property ReturnBook[] $returnBooks
- * @property ReturnBook[] $returnBooks0
+ * @property LendingOutBooks[] $LendingOutBooks
+ * @property ReturnBooks[] $ReturnBooks
  * @property Role $role
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
@@ -28,7 +27,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'users';
     }
@@ -66,36 +65,35 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * Gets query for [[Extradition]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getExtradition()
-    {
-        return $this->hasMany(Extradition::class, ['employee_id' => 'id']);
-    }
-
 
     /**
      * Gets query for [[ReturnBook]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getReturnBook()
+    public function getClientReturnBooks(): \yii\db\ActiveQuery
     {
-        return $this->hasMany(ReturnBook::class, ['employee_id' => 'id']);
+        return $this->hasMany(ReturnBook::class, ['id' => 'client_id'])->via('ClientReturnBooks');
     }
 
+    /**
+     * Gets query for [[LendingOutBooks]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClientLendingOutBooks(): \yii\db\ActiveQuery
+    {
+        return $this->hasMany(LendingOutBook::class, ['client_id' => 'id']);
+    }
 
     /**
      * Gets query for [[Role]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getRole()
+    public function getRole(): \yii\db\ActiveQuery
     {
-        return $this->hasOne(Role::class, ['id' => 'role_id']);
+        return $this->hasOne(Role::class, ['id' => 'role_id'])->via('role');
     }
 
     /**
@@ -114,17 +112,46 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
-    public static function findIdentity($id)
+    /**
+     * @param $id
+     * @return static|null
+     */
+    public static function findIdentity($id): ?User
     {
         $user = User::findOne($id);
         return isset($user) ? new static($user) : null;
     }
 
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword(string $password): bool
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    /**
+     * @param $token
+     * @param $type
+     * @return mixed
+     * @throws NotSupportedException
+     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
+    /**
+     * @param $username
+     * @return User|null
+     */
+    public static function findByUsername($username): ?User
+    {
+        return static::findOne(['username' => $username]);
+    }
     /**
      * {@inheritdoc}
      */
@@ -136,7 +163,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function getAuthKey()
+    public function getAuthKey(): ?string
     {
         return $this->auth_key;
     }
@@ -144,7 +171,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function validateAuthKey($authKey)
+    public function validateAuthKey($authKey): ?bool
     {
         return $this->auth_key === $authKey;
     }

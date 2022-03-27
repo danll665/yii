@@ -16,8 +16,8 @@ class m220325_125641_create_table_books extends Migration
             'id' => $this->bigPrimaryKey()->notNull(),
             'name' => $this->string()->notNull(),
             'artikul' => $this->integer()->notNull(),
-            'receipt_date' => $this->integer()->notNull(),
             'author' => $this->string()->notNull(),
+            'created_at' => $this->timestamp()->notNull(),
         ]);
     }
     /**

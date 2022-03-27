@@ -18,7 +18,7 @@ class BooksController extends Controller
         $book->name='dsa';
         $book->author='gandon';
         $book->artikul=123;
-        $book->receipt_date=date("Ymd");
+        $book->created_at=date("Ymd");
         $book->save();
     }
 }

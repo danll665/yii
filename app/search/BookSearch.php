@@ -17,7 +17,7 @@ class BookSearch extends Book
     public function rules()
     {
         return [
-            [['id', 'artikul', 'receipt_date'], 'integer'],
+            [['id', 'artikul', 'created_at'], 'integer'],
             [['name', 'author'], 'safe'],
         ];
     }
@@ -60,7 +60,7 @@ class BookSearch extends Book
         $query->andFilterWhere([
             'id' => $this->id,
             'artikul' => $this->artikul,
-            'receipt_date' => $this->receipt_date,
+            'created_at' => $this->created_at,
         ]);
 
         $query->andFilterWhere(['ilike', 'name', $this->name])
