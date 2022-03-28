@@ -11,6 +11,7 @@ docker-compose exec php yii migrate
 </pre>
 <h1>Для проекта</h1>
 Запустить миграции
+<br>
 Заполнить вручную таблицы, так как нет фикстур. 
 <pre>roles
 1,client
