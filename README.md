@@ -10,7 +10,8 @@ docker-compose exec php chmod 777 -R .
 docker-compose exec php yii migrate 
 </pre>
 <h1>Для проекта</h1>
-Нужно заполнить вручную таблицы, так как нет фикстур. 
+Запустить миграции
+Заполнить вручную таблицы, так как нет фикстур. 
 <pre>roles
 1,client
 2,employee
